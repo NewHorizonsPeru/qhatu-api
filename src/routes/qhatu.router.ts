@@ -1,8 +1,12 @@
-import { Express } from "express";
+import express, { Express } from "express";
 import productController from "../controllers/product.controller";
 
 const registerRoutes = (app: Express) => {
-  app.use("/product", productController);
+  const router = express.Router();
+  app.use("/api/v1", router);
+  router.use("/product", productController);
+  router.use("/category", productController);
+  router.use("/user", productController);
 };
 
 export default registerRoutes;

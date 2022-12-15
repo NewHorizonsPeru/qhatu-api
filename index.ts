@@ -5,6 +5,8 @@ const app: Express = express();
 dotenv.config();
 const port = process.env.API_PORT;
 
+app.use(express.json());
+
 app.get("/", (request: Request, response: Response) => {
   response.send("🦊 Express & TypeScript");
 });
@@ -60,6 +62,43 @@ app.get("/sales", (request: Request, response: Response) => {
     });
   }
 });
+
+app.post("/product", (request: Request, response: Response) => {
+  const body = request.body;
+  response.json({
+    method: "POST",
+    payload: body,
+  });
+});
+
+app.put("/product/:productId", (request: Request, response: Response) => {
+  const { productId } = request.params;
+  const payload = { ...request.body, productId };
+
+  response.json({
+    method: "PUT",
+    payload: payload,
+  });
+});
+
+app.patch("/product/:productId", (request: Request, response: Response) => {
+  const { productId } = request.params;
+  const payload = { ...request.body, productId };
+
+  response.json({
+    method: "PATCH",
+    payload: payload,
+  });
+});
+
+app.delete("/product/:productId", (request: Request, response: Response) => {
+  const { productId } = request.params;
+  response.json({
+    method: "DELETE",
+    payload: { productId },
+  });
+});
+
 app.listen(port, () => {
   console.log(`⚡️ Message: Server is running 🔥`);
 });

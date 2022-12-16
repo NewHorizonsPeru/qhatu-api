@@ -52,19 +52,6 @@ categoryController.put(
     });
   }
 );
-/** UPDATE PARTIAL **/
-categoryController.patch(
-  "/:categoryId",
-  (request: Request, response: Response) => {
-    const { categoryId } = request.params;
-    const payload = { ...request.body, categoryId };
-
-    response.status(HttpStatusCode.CREATED).json({
-      method: "PATCH",
-      payload: payload,
-    });
-  }
-);
 /** REMOVE **/
 categoryController.delete(
   "/:categoryId",

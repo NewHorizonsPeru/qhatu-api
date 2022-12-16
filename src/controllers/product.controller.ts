@@ -39,16 +39,6 @@ productController.put(
     response.status(HttpStatusCode.CREATED).json(product);
   }
 );
-/** UPDATE PARTIAL **/
-productController.patch(
-  "/:productId",
-  async (request: Request, response: Response) => {
-    const { productId } = request.params;
-    const productToUpdate = request.body;
-    const product = await productService.update(productId, productToUpdate);
-    response.status(HttpStatusCode.CREATED).json(product);
-  }
-);
 /** REMOVE **/
 productController.delete(
   "/:productId",

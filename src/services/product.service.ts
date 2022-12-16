@@ -1,19 +1,54 @@
 import ProductDto from "../dtos/product.dto";
+import { generateProducts, generateUuid } from "../util/fake.data";
 
 class ProductService {
-  constructor() {}
-  getAll(): ProductDto[] {
-    return [];
+  products: ProductDto[];
+  constructor() {
+    this.products = generateProducts();
   }
-  add(product: ProductDto) {}
-  getById(id: string): ProductDto {
-    return { id: "131X22", name: "HIDROLAVADORA KATCHER" };
+  getAll(): Promise<ProductDto[]> {
+    return new Promise((resolve, reject) =>
+      setTimeout(() => {
+        resolve(this.products);
+      }, 5000)
+    );
   }
-  update(id: string, product: ProductDto): ProductDto {
-    return { id: "131X22", name: "HIDROLAVADORA KATCHER" };
+  async getById(productId: string): Promise<ProductDto> {
+    const product = this.products.find((p) => p.id === productId);
+    if (!product) {
+      throw new Error("Product not found 😔");
+    }
+    return product;
   }
-  remove(id: string): ProductDto {
-    return { id: "131X22", name: "HIDROLAVADORA KATCHER" };
+  async add(productToAdd: ProductDto): Promise<ProductDto> {
+    productToAdd.id = generateUuid();
+    this.products.push(productToAdd);
+    return productToAdd;
+  }
+  async update(
+    productId: string,
+    productToUpdate: ProductDto
+  ): Promise<ProductDto> {
+    const index = this.products.findIndex((p) => p.id === productId);
+    if (index === -1) {
+      throw new Error("Product not found 😔");
+    }
+    const product = this.products[index];
+    const productUpdated = {
+      ...product,
+      ...productToUpdate,
+    };
+    this.products[index] = productUpdated;
+
+    return productUpdated;
+  }
+  async remove(productId: string): Promise<{}> {
+    const index = this.products.findIndex((p) => p.id === productId);
+    if (index === -1) {
+      throw new Error("Product not found 😔");
+    }
+    this.products.splice(index, 1);
+    return { productId, success: true };
   }
 }
 

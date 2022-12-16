@@ -1,7 +1,8 @@
 export default interface ProductDto {
-  id: string;
+  id?: string;
   name: string;
-  description?: string;
-  price?: number;
-  sku?: string;
+  description: string;
+  price: number;
+  sku: string;
+  imageUrl: string;
 }

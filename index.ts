@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 import express, { Request, Response, Express } from "express";
 import {
+  boomErrorMiddleware,
   jsonErrorMiddleware,
   logErrorMiddleware,
 } from "./src/middlewares/error.middleware";
@@ -15,6 +16,7 @@ app.use(express.json());
 registerRoutes(app);
 
 app.use(logErrorMiddleware);
+app.use(boomErrorMiddleware);
 app.use(jsonErrorMiddleware);
 
 app.listen(port, () => {

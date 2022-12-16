@@ -11,6 +11,19 @@ const logErrorMiddleware = (
   next(error);
 };
 
+const boomErrorMiddleware = (
+  error: any,
+  request: Request,
+  response: Response,
+  next: NextFunction
+) => {
+  if (error.isBoom) {
+    const { output } = error;
+    response.status(output.statusCode).json(output.payload);
+  }
+  next(error);
+};
+
 const jsonErrorMiddleware = (
   error: Error,
   request: Request,
@@ -24,4 +37,4 @@ const jsonErrorMiddleware = (
   });
 };
 
-export { logErrorMiddleware, jsonErrorMiddleware };
+export { logErrorMiddleware, jsonErrorMiddleware, boomErrorMiddleware };

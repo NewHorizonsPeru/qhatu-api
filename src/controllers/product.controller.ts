@@ -1,6 +1,8 @@
 import express, { NextFunction, Request, Response } from "express";
 import ProductDto from "../dtos/product.dto";
 import HttpStatusCode from "../enums/httpstatuscode.enum";
+import { schemaMiddleware } from "../middlewares/schema.middleware";
+import { createProductSchema } from "../schemas/product.schema";
 import ProductService from "../services/product.service";
 
 const productController = express.Router();
@@ -24,11 +26,16 @@ productController.get(
   }
 );
 /** CREATE **/
-productController.post("/", async (request: Request, response: Response) => {
-  const productToCreate: ProductDto = request.body;
-  const product = await productService.add(productToCreate);
-  response.status(HttpStatusCode.CREATED).json(product);
-});
+productController.post(
+  "/",
+  schemaMiddleware(createProductSchema, "body"),
+  async (request: Request, response: Response) => {
+    const productToCreate: ProductDto = request.body;
+    console.log(productToCreate);
+    const product = await productService.add(productToCreate);
+    response.status(HttpStatusCode.CREATED).json(product);
+  }
+);
 /** UPDATE ALL **/
 productController.put(
   "/:productId",

@@ -1,66 +1,51 @@
-import express, { Request, Response } from "express";
+import express, { NextFunction, Request, Response } from "express";
 import CategoryDto from "../dtos/category.dto";
 import HttpStatusCode from "../enums/httpstatuscode.enum";
+import CategoryService from "../services/category.service";
 
 const categoryController = express.Router();
-
+const categoryService = new CategoryService();
 /** GET ALL **/
-categoryController.get("/", (request: Request, response: Response) => {
-  const categories: CategoryDto[] = [
-    {
-      id: "2131",
-      name: "Product 01",
-    },
-  ];
+categoryController.get("/", async (request: Request, response: Response) => {
+  const categories = await categoryService.getAll();
   response.status(HttpStatusCode.OK).json(categories);
 });
 /** GET BY ID **/
 categoryController.get(
   "/:categoryId",
-  (request: Request, response: Response) => {
-    const { categoryId } = request.params;
-    if (categoryId === "2705") {
-      response.status(HttpStatusCode.NOT_FOUND).json({
-        message: "Product not found.",
-      });
-    } else {
-      response.status(HttpStatusCode.OK).json({
-        categoryId: categoryId,
-        productName: "Leche Evaporada Danlac",
-      });
+  async (request: Request, response: Response, next: NextFunction) => {
+    try {
+      const { categoryId } = request.params;
+      const category = await categoryService.getById(categoryId);
+      response.status(HttpStatusCode.OK).json(category);
+    } catch (error: any) {
+      next(error);
     }
   }
 );
 /** CREATE **/
-categoryController.post("/", (request: Request, response: Response) => {
-  const body = request.body;
-  response.status(HttpStatusCode.CREATED).json({
-    method: "POST",
-    payload: body,
-  });
+categoryController.post("/", async (request: Request, response: Response) => {
+  const categoryToCreate: CategoryDto = request.body;
+  const category = await categoryService.add(categoryToCreate);
+  response.status(HttpStatusCode.CREATED).json(category);
 });
 /** UPDATE ALL **/
 categoryController.put(
   "/:categoryId",
-  (request: Request, response: Response) => {
+  async (request: Request, response: Response) => {
     const { categoryId } = request.params;
-    const payload = { ...request.body, categoryId };
-
-    response.status(HttpStatusCode.CREATED).json({
-      method: "PUT",
-      payload: payload,
-    });
+    const categoryToUpdate = request.body;
+    const category = await categoryService.update(categoryId, categoryToUpdate);
+    response.status(HttpStatusCode.CREATED).json(category);
   }
 );
 /** REMOVE **/
 categoryController.delete(
   "/:categoryId",
-  (request: Request, response: Response) => {
+  async (request: Request, response: Response) => {
     const { categoryId } = request.params;
-    response.status(HttpStatusCode.OK).json({
-      method: "DELETE",
-      payload: { categoryId },
-    });
+    const category = await categoryService.remove(categoryId);
+    response.status(HttpStatusCode.OK).json(category);
   }
 );
 

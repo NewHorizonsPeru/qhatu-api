@@ -1,6 +1,9 @@
+type Role = "ADMIN" | "CUSTOMER" | "INVENTORY";
 export default interface UserDto {
-  id: string;
-  mail: string;
-  firstName?: string;
-  lastName?: string;
+  id?: string;
+  username: string;
+  firstName: string;
+  lastName: string;
+  password: string;
+  role: Role;
 }

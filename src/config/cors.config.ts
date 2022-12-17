@@ -1,7 +1,7 @@
 import { CorsOptions } from "cors";
 
 const whiteList = [
-  "http://127.0.0.1:5505",
+  "http://localhost:2705",
   "https://qhatu.com.pe",
   "http://localhost:4200",
 ];

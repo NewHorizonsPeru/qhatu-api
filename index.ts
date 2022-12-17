@@ -8,14 +8,13 @@ import {
   logErrorMiddleware,
 } from "./src/middlewares/error.middleware";
 import registerRoutes from "./src/routes/qhatu.router";
-import { corsOptions } from "./src/config/cors.config";
 
 const app: Express = express();
 dotenv.config();
 const port = process.env.API_PORT;
 
 app.use(express.json());
-app.use(cors(corsOptions));
+app.use(cors());
 registerRoutes(app);
 
 app.use(logErrorMiddleware);

@@ -9,11 +9,7 @@ class ProductService {
     this.products = generateProducts();
   }
   getAll(): Promise<ProductDto[]> {
-    return new Promise((resolve, reject) =>
-      setTimeout(() => {
-        resolve(this.products);
-      }, 5000)
-    );
+    return new Promise((resolve) => resolve(this.products));
   }
   async getById(productId: string): Promise<ProductDto> {
     const product = this.products.find((p) => p.id === productId);

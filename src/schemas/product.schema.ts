@@ -12,11 +12,11 @@ import Joi from "joi";
  * **/
 
 const id = Joi.string().uuid();
-const name = Joi.string().alphanum().min(15).max(150);
-const description = Joi.string().alphanum().min(50).max(500);
+const name = Joi.string().min(15).max(150);
+const description = Joi.string().min(50).max(500);
 const price = Joi.number().integer().min(1);
-const sku = Joi.string().alphanum().min(6).max(9);
-const imageUrl = Joi.string().dataUri();
+const sku = Joi.string().min(6).max(9);
+const imageUrl = Joi.string();
 
 const createProductSchema = Joi.object({
   name: name.required(),

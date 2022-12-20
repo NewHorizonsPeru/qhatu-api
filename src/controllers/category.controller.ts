@@ -1,6 +1,9 @@
 import express, { NextFunction, Request, Response } from "express";
+import passport from "passport";
 import CategoryDto from "../dtos/category.dto";
 import HttpStatusCode from "../enums/httpstatuscode.enum";
+import QhatuRole from "../enums/role.enum";
+import { accessControlMiddleware } from "../middlewares/auth.middleware";
 import CategoryService from "../services/category.service";
 
 const categoryController = express.Router();
@@ -13,8 +16,11 @@ categoryController.get("/", async (request: Request, response: Response) => {
 /** GET BY ID **/
 categoryController.get(
   "/:categoryId",
+  passport.authenticate("jwt", { session: false }),
+  accessControlMiddleware(QhatuRole.Admin, QhatuRole.Sales),
   async (request: Request, response: Response, next: NextFunction) => {
     try {
+      console.log(request.user);
       const { categoryId } = request.params;
       const category = await categoryService.getById(categoryId);
       response.status(HttpStatusCode.OK).json(category);

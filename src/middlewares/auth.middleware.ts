@@ -2,17 +2,28 @@ import { NextFunction, Request, Response } from "express";
 import boom from "@hapi/boom";
 import { enviroment } from "../config/enviroment.config";
 
-const authMiddleware = (
-  request: Request,
+const roleAdminMiddleware = (
+  request: any,
   response: Response,
   next: NextFunction
 ) => {
-  const secretValue = request.headers["secret-value"];
-  if (secretValue === enviroment.SecretKey) {
+  const { user } = request;
+  if (user.role === "ADMIN") {
     next();
   } else {
-    next(boom.unauthorized("401 - UNAUTHORIZED"));
+    next(boom.unauthorized("User hasn't priviligies necesaries."));
   }
 };
 
-export { authMiddleware };
+const accessControlMiddleware = (...roles: any[]) => {
+  return (request: any, response: Response, next: NextFunction) => {
+    const { user } = request;
+    if (roles.includes(user.role)) {
+      next();
+    } else {
+      next(boom.unauthorized("User hasn't priviligies necesaries."));
+    }
+  };
+};
+
+export { accessControlMiddleware };

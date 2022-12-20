@@ -11,7 +11,7 @@ securityController.post(
     try {
       const { user } = request;
       const token = generateJwt(user);
-      response.json({ token });
+      response.json({ ...user, token });
     } catch (error) {
       next(error);
     }

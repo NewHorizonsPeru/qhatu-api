@@ -31,7 +31,6 @@ class UserService {
   }
   async getByUsername(username: string): Promise<UserDto> {
     const user = this.users.find((p) => p.username === username);
-    console.log(username);
     if (!user) {
       throw boom.notFound("user not found 😔");
     }

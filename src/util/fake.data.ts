@@ -11,7 +11,7 @@ const generateProducts = (): ProductDto[] => {
       id: faker.datatype.uuid(),
       name: faker.commerce.productName(),
       description: faker.commerce.productDescription(),
-      price: 0, //parseFloat(faker.commerce.price()),
+      price: parseFloat(faker.commerce.price()),
       imageUrl: faker.image.imageUrl(),
       sku: faker.phone.imei(),
     });

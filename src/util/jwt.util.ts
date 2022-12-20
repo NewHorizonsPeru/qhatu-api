@@ -8,7 +8,12 @@ const generateJwt = (user: UserDto) => {
     fullName: `${user.firstName} ${user.lastName}`,
     role: user.role,
   };
-  const jwtoken = jwt.sign(payload, enviroment.SecretKey);
+
+  const options: jwt.SignOptions = {
+    expiresIn: "1h",
+  };
+
+  const jwtoken = jwt.sign(payload, enviroment.SecretKey, options);
   return jwtoken;
 };
 

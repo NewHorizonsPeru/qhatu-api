@@ -1,7 +1,6 @@
 import express, { NextFunction, Request, Response } from "express";
 import ProductDto from "../dtos/product.dto";
 import HttpStatusCode from "../enums/httpstatuscode.enum";
-import { authMiddleware } from "../middlewares/auth.middleware";
 import { schemaMiddleware } from "../middlewares/schema.middleware";
 import { createProductSchema } from "../schemas/product.schema";
 import ProductService from "../services/product.service";
@@ -32,7 +31,6 @@ productController.post(
   schemaMiddleware(createProductSchema, "body"),
   async (request: Request, response: Response) => {
     const productToCreate: ProductDto = request.body;
-    console.log(productToCreate);
     const product = await productService.add(productToCreate);
     response.status(HttpStatusCode.CREATED).json(product);
   }

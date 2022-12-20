@@ -8,7 +8,6 @@ const authMiddleware = (
   next: NextFunction
 ) => {
   const secretValue = request.headers["secret-value"];
-  console.log(request.headers);
   if (secretValue === enviroment.SecretKey) {
     next();
   } else {

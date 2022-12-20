@@ -10,13 +10,14 @@ import {
 } from "./src/middlewares/error.middleware";
 import registerRoutes from "./src/routes/qhatu.router";
 import registerStrategies from "./src/strategies/strategies";
+import { corsOptions } from "./src/config/cors.config";
 
 const app: Express = express();
 dotenv.config();
 const port = process.env.API_PORT;
 
 app.use(express.json());
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(passport.initialize());
 registerStrategies();
 registerRoutes(app);

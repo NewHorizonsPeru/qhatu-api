@@ -29,7 +29,26 @@ categoryController.get(
     }
   }
 );
-/** CREATE **/
+
+/**
+ * POST CATEGORY
+ * @openapi
+ * /category:
+ *      post:
+ *        tags:
+ *          - category
+ *        summaty: "Get all categories"
+ *        requestBody:
+ *          content:
+ *            application/json:
+ *      responses:
+ *        '200':
+ *          description: Retorna el objeto insertado en la coleccion.
+ *        '422':
+ *          description: Error de validacion.
+ *      security:
+ *       - ffofofof: []
+ */
 categoryController.post("/", async (request: Request, response: Response) => {
   const categoryToCreate: CategoryDto = request.body;
   const category = await categoryService.add(categoryToCreate);

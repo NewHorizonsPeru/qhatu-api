@@ -2,6 +2,8 @@ import dotenv from "dotenv";
 import express, { Request, Response, Express } from "express";
 import passport from "passport";
 import cors from "cors";
+import swagggerUi from "swagger-ui-express";
+import swaggerConfig from "./src/config/swagger.config";
 
 import {
   boomErrorMiddleware,
@@ -23,6 +25,8 @@ app.use(passport.initialize());
 
 registerStrategies();
 registerRoutes(app);
+
+app.use("/swagger", swagggerUi.serve, swagggerUi.setup(swaggerConfig));
 
 app.use(logErrorMiddleware);
 app.use(boomErrorMiddleware);

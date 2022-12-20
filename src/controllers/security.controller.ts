@@ -1,5 +1,6 @@
 import express, { NextFunction, Request, Response } from "express";
 import passport from "passport";
+import { generateJwt } from "../util/jwt.util";
 
 const securityController = express.Router();
 
@@ -8,7 +9,9 @@ securityController.post(
   passport.authenticate("local", { session: false }),
   async (request: any, response: any, next: any) => {
     try {
-      response.json({ message: "Ok" });
+      const { user } = request;
+      const token = generateJwt(user);
+      response.json({ token });
     } catch (error) {
       next(error);
     }

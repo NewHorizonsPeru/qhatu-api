@@ -29,9 +29,9 @@ class UserService {
 
     return user;
   }
-  async getByUsername(usename: string): Promise<UserDto> {
-    const user = this.users.find((p) => p.username === usename);
-    console.log(user, usename, this.users);
+  async getByUsername(username: string): Promise<UserDto> {
+    const user = this.users.find((p) => p.username === username);
+    console.log(username);
     if (!user) {
       throw boom.notFound("user not found 😔");
     }
@@ -45,7 +45,6 @@ class UserService {
     userToAdd.id = generateUuid();
     userToAdd.password = await hashText(userToAdd.password);
     this.users.push(userToAdd);
-    console.log(this.users);
     return userToAdd;
   }
   async update(userId: string, userToUpdate: UserDto): Promise<UserDto> {

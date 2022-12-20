@@ -11,14 +11,16 @@ import {
 import registerRoutes from "./src/routes/qhatu.router";
 import registerStrategies from "./src/strategies/strategies";
 import { corsOptions } from "./src/config/cors.config";
+import { enviroment, initializeDotEnv } from "./src/config/enviroment.config";
 
 const app: Express = express();
-dotenv.config();
-const port = process.env.API_PORT;
+
+initializeDotEnv();
 
 app.use(express.json());
 app.use(cors(corsOptions));
 app.use(passport.initialize());
+
 registerStrategies();
 registerRoutes(app);
 
@@ -26,6 +28,6 @@ app.use(logErrorMiddleware);
 app.use(boomErrorMiddleware);
 app.use(jsonErrorMiddleware);
 
-app.listen(port, () => {
+app.listen(enviroment.ApiPort, () => {
   console.log(`⚡️ Message: Server is running 🔥`);
 });

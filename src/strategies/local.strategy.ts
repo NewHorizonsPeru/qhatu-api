@@ -5,16 +5,19 @@ import { validateHash } from "../util/bcrypt.util";
 
 const userService = new UserService();
 const localStrategy = new Strategy(
+  {
+    usernameField: "email",
+    passwordField: "password",
+  },
   async (username: string, password: string, done: any) => {
     try {
       const user = await userService.getByUsername(username);
-      console.log(`[USER]: ${user}`);
       if (!user) {
-        done(boom.badData(), false);
+        done(boom.badData("Username or Password incorrect."), false);
       }
       const validateCredentials = await validateHash(password, user.password);
       if (!validateCredentials) {
-        done(boom.badData(), false);
+        done(boom.badData("Username or Password incorrect."), false);
       }
       done(null, user);
     } catch (error) {

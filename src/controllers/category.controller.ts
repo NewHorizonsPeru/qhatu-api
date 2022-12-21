@@ -8,19 +8,34 @@ import CategoryService from "../services/category.service";
 
 const categoryController = express.Router();
 const categoryService = new CategoryService();
-/** GET ALL **/
+/** GET ALL
+ * @openapi
+ * /category:
+ *      get:
+ *      responses:
+ *        '200':
+ *          description: Retorna el objeto insertado en la coleccion.
+ *        '422':
+ *          description: Error de validacion.
+ */
 categoryController.get("/", async (request: Request, response: Response) => {
   const categories = await categoryService.getAll();
   response.status(HttpStatusCode.OK).json(categories);
 });
-/** GET BY ID **/
+/** GET BY ID
+ * @openapi
+ * /category/id:
+ *      get:
+ *      responses:
+ *        '200':
+ *          description: Retorna el objeto insertado en la coleccion.
+ *        '422':
+ *          description: Error de validacion.
+ */
 categoryController.get(
   "/:categoryId",
-  passport.authenticate("jwt", { session: false }),
-  accessControlMiddleware(QhatuRole.Admin, QhatuRole.Sales),
   async (request: Request, response: Response, next: NextFunction) => {
     try {
-      console.log(request.user);
       const { categoryId } = request.params;
       const category = await categoryService.getById(categoryId);
       response.status(HttpStatusCode.OK).json(category);
@@ -35,26 +50,27 @@ categoryController.get(
  * @openapi
  * /category:
  *      post:
- *        tags:
- *          - category
- *        summaty: "Get all categories"
- *        requestBody:
- *          content:
- *            application/json:
  *      responses:
  *        '200':
  *          description: Retorna el objeto insertado en la coleccion.
  *        '422':
  *          description: Error de validacion.
- *      security:
- *       - ffofofof: []
  */
 categoryController.post("/", async (request: Request, response: Response) => {
   const categoryToCreate: CategoryDto = request.body;
   const category = await categoryService.add(categoryToCreate);
-  response.status(HttpStatusCode.CREATED).json(category);
+  const modelCategory = response.status(HttpStatusCode.CREATED).json(category);
 });
-/** UPDATE ALL **/
+/** UPDATE ALL
+ * @openapi
+ * /category:
+ *      put:
+ *      responses:
+ *        '200':
+ *          description: Retorna el objeto insertado en la coleccion.
+ *        '422':
+ *          description: Error de validacion.
+ */
 categoryController.put(
   "/:categoryId",
   async (request: Request, response: Response) => {
@@ -64,7 +80,16 @@ categoryController.put(
     response.status(HttpStatusCode.CREATED).json(category);
   }
 );
-/** REMOVE **/
+/** REMOVE
+ * @openapi
+ * /category:
+ *      delete:
+ *      responses:
+ *        '200':
+ *          description: Retorna el objeto insertado en la coleccion.
+ *        '422':
+ *          description: Error de validacion.
+ */
 categoryController.delete(
   "/:categoryId",
   async (request: Request, response: Response) => {

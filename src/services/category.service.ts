@@ -1,57 +1,58 @@
 import boom from "@hapi/boom";
 import CategoryDto from "../dtos/category.dto";
-
-import { generateCategories, generateUuid } from "../util/fake.data";
+import CategoryModel from "../models/category.model";
+import CategoryRepository from "../repositories/category.repository";
 
 class CategoryService {
-  categories: CategoryDto[];
+  private readonly categoryRepository;
   constructor() {
-    this.categories = generateCategories();
+    this.categoryRepository = new CategoryRepository();
   }
-  getAll(): Promise<CategoryDto[]> {
-    return new Promise((resolve, reject) =>
-      setTimeout(() => {
-        resolve(this.categories);
-      }, 5000)
-    );
+
+  async getAll(): Promise<CategoryDto[]> {
+    const categoryModel = new CategoryModel();
+    let categoriesDto: CategoryDto[] = [];
+    const categoriesModel = await this.categoryRepository.getAll();
+    categoriesModel.map((c) => categoriesDto.push({ id: c.id, name: c.name! }));
+    return categoriesDto;
   }
+
   async getById(categoryId: string): Promise<CategoryDto> {
-    const category = this.categories.find((p) => p.id === categoryId);
-    if (!category) {
+    const categoryModel = await this.categoryRepository.getById(categoryId);
+    if (!categoryModel) {
       throw boom.notFound("Category not found 😔");
     }
-
-    return category;
+    const categoryDto: CategoryDto = {
+      id: categoryModel.id,
+      name: categoryModel.name!,
+    };
+    return categoryDto;
   }
   async add(categoryToAdd: CategoryDto): Promise<CategoryDto> {
-    categoryToAdd.id = generateUuid();
-    this.categories.push(categoryToAdd);
+    const categoryModel = new CategoryModel({
+      name: categoryToAdd.name,
+    });
+    const categorySave = await this.categoryRepository.add(categoryModel);
+    categoryToAdd.id = categorySave.id;
     return categoryToAdd;
   }
   async update(
     categoryId: string,
     categoryToUpdate: CategoryDto
   ): Promise<CategoryDto> {
-    const index = this.categories.findIndex((p) => p.id === categoryId);
-    if (index === -1) {
-      throw boom.notFound("Category not found 😔");
-    }
-    const category = this.categories[index];
-    const categoryUpdated = {
-      ...category,
-      ...categoryToUpdate,
+    const categoryModel = await this.categoryRepository.update(
+      categoryToUpdate,
+      categoryId
+    );
+    const categoryDto: CategoryDto = {
+      name: categoryModel?.name!,
+      id: categoryModel?.id,
     };
-    this.categories[index] = categoryUpdated;
-
-    return categoryUpdated;
+    return categoryDto;
   }
   async remove(categoryId: string): Promise<{}> {
-    const index = this.categories.findIndex((p) => p.id === categoryId);
-    if (index === -1) {
-      throw new Error("Category not found 😔");
-    }
-    this.categories.splice(index, 1);
-    return { categoryId, success: true };
+    const categoryIdRemoved = await this.categoryRepository.remove(categoryId);
+    return { categoryIdRemoved, success: true };
   }
 }
 

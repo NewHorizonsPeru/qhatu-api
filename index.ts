@@ -1,10 +1,10 @@
-import dotenv from "dotenv";
-import express, { Request, Response, Express } from "express";
+import express, { Express } from "express";
 import passport from "passport";
 import cors from "cors";
 import swagggerUi from "swagger-ui-express";
-import swaggerConfig from "./src/config/swagger.config";
 
+import "./src/config/mongodb.config";
+import swaggerConfig from "./src/config/swagger.config";
 import {
   boomErrorMiddleware,
   jsonErrorMiddleware,
@@ -13,11 +13,9 @@ import {
 import registerRoutes from "./src/routes/qhatu.router";
 import registerStrategies from "./src/strategies/strategies";
 import { corsOptions } from "./src/config/cors.config";
-import { enviroment, initializeDotEnv } from "./src/config/enviroment.config";
+import { enviroment } from "./src/config/enviroment.config";
 
 const app: Express = express();
-
-initializeDotEnv();
 
 app.use(express.json());
 app.use(cors(corsOptions));

@@ -1,6 +1,5 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Response } from "express";
 import boom from "@hapi/boom";
-import { enviroment } from "../config/enviroment.config";
 
 const roleAdminMiddleware = (
   request: any,

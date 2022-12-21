@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import { Response, NextFunction } from "express";
 import boom from "@hapi/boom";
 
 const schemaMiddleware = (schema: any, property: any) => {

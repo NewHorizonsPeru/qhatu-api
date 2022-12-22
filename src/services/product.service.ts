@@ -1,55 +1,61 @@
 import boom from "@hapi/boom";
 
+import ProductModel from "../models/product.model";
 import ProductDto from "../dtos/product.dto";
-import { generateProducts, generateUuid } from "../util/fake.data";
+import ProductRepository from "../repositories/product.repository";
 
 class ProductService {
-  products: ProductDto[];
+  private readonly productRepository;
   constructor() {
-    this.products = generateProducts();
+    this.productRepository = new ProductRepository();
   }
-  getAll(): Promise<ProductDto[]> {
-    return new Promise((resolve) => resolve(this.products));
+  async getAll(): Promise<ProductDto[]> {
+    let productsDto: ProductDto[] = [];
+    const productsModel = await this.productRepository.getAll();
+    productsModel.map((p) =>
+      productsDto.push({
+        id: p.id,
+        name: p.name!,
+        description: p.description!,
+        price: p.price!,
+        sku: p.code!,
+        imageUrl: p.imageUrl!,
+        category: p.category!,
+      })
+    );
+    return productsDto;
   }
   async getById(productId: string): Promise<ProductDto> {
-    const product = this.products.find((p) => p.id === productId);
-    if (!product) {
+    const productModel = await this.productRepository.getById(productId);
+    if (!productModel) {
       throw boom.notFound("Product not found 😔");
     }
-    if (product.price === 0) {
-      throw boom.conflict("Product not valid 🥸");
+    if (productModel.price! === 0) {
+      throw boom.conflict("Product with price zero 😱");
     }
-    return product;
-  }
-  async add(productToAdd: ProductDto): Promise<ProductDto> {
-    productToAdd.id = generateUuid();
-    this.products.push(productToAdd);
-    return productToAdd;
-  }
-  async update(
-    productId: string,
-    productToUpdate: ProductDto
-  ): Promise<ProductDto> {
-    const index = this.products.findIndex((p) => p.id === productId);
-    if (index === -1) {
-      throw boom.notFound("Product not found 😔");
-    }
-    const product = this.products[index];
-    const productUpdated = {
-      ...product,
-      ...productToUpdate,
+    const productDto: ProductDto = {
+      id: productModel.id,
+      name: productModel.name!,
+      description: productModel.description!,
+      price: productModel.price!,
+      sku: productModel.code!,
+      imageUrl: productModel.imageUrl!,
+      category: productModel.category!,
     };
-    this.products[index] = productUpdated;
-
-    return productUpdated;
+    return productDto;
   }
-  async remove(productId: string): Promise<{}> {
-    const index = this.products.findIndex((p) => p.id === productId);
-    if (index === -1) {
-      throw new Error("Product not found 😔");
-    }
-    this.products.splice(index, 1);
-    return { productId, success: true };
+  async add(productDtoToAdd: ProductDto): Promise<ProductDto> {
+    const productModel = new ProductModel({
+      name: productDtoToAdd.name,
+      description: productDtoToAdd.description,
+      price: productDtoToAdd.price,
+      code: productDtoToAdd.sku,
+      imageUrl: productDtoToAdd.imageUrl,
+      category: productDtoToAdd.category,
+    });
+    const newProductModel = await this.productRepository.add(productModel);
+    productDtoToAdd.id = newProductModel.id;
+    return productDtoToAdd;
   }
 }
 

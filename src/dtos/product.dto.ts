@@ -5,4 +5,5 @@ export default interface ProductDto {
   price: number;
   sku: string;
   imageUrl: string;
+  category: string;
 }

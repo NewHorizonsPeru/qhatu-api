@@ -10,7 +10,6 @@ class CategoryService {
   }
 
   async getAll(): Promise<CategoryDto[]> {
-    const categoryModel = new CategoryModel();
     let categoriesDto: CategoryDto[] = [];
     const categoriesModel = await this.categoryRepository.getAll();
     categoriesModel.map((c) => categoriesDto.push({ id: c.id, name: c.name! }));

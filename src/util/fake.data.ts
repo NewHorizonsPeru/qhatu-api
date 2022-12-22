@@ -14,6 +14,7 @@ const generateProducts = (): ProductDto[] => {
       price: parseFloat(faker.commerce.price()),
       imageUrl: faker.image.imageUrl(),
       sku: faker.phone.imei(),
+      category: faker.commerce.productMaterial(),
     });
   }
   return products;

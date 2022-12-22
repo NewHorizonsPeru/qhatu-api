@@ -26,4 +26,4 @@ const localStrategy = new Strategy(
   }
 );
 
-export { localStrategy };
+export default localStrategy;

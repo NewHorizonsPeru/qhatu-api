@@ -9,7 +9,6 @@ class CategoryRepository {
   }
   async getById(cateogryId: string) {
     const category = await CategoryModel.findById(cateogryId);
-    console.log(category);
     return category;
   }
   async add(categoryModel: any) {

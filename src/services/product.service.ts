@@ -57,6 +57,28 @@ class ProductService {
     productDtoToAdd.id = newProductModel.id;
     return productDtoToAdd;
   }
+  async update(
+    productId: string,
+    productDtoToUpdate: ProductDto
+  ): Promise<ProductDto> {
+    const productModel = await this.productRepository.update(
+      productDtoToUpdate,
+      productId
+    );
+    const productDto: ProductDto = {
+      id: productModel?.id,
+      name: productModel?.name!,
+      description: productModel?.description!,
+      price: productModel?.price!,
+      sku: productModel?.code!,
+      imageUrl: productModel?.imageUrl!,
+      category: productModel?.category!,
+    };
+    return productDto;
+  }
+  async remove(productId: string): Promise<void> {
+    await this.productRepository.remove(productId);
+  }
 }
 
 export default ProductService;

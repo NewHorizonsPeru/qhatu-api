@@ -8,11 +8,7 @@ import userController from "../controllers/user.controller";
 const registerRoutes = (app: Express) => {
   const router = express.Router();
   app.use("/api/v1", router);
-  router.use(
-    "/product",
-    passport.authenticate("jwt", { session: false }),
-    productController
-  );
+  router.use("/product", productController);
   router.use("/category", categoryController);
   router.use("/user", userController);
   router.use("/security", securityController);

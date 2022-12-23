@@ -1,72 +1,94 @@
 import boom from "@hapi/boom";
 import UserDto from "../dtos/user.dto";
+import UserModel from "../models/user.model";
+import UserRepository from "../repositories/user.repository";
 import { hashText } from "../util/bcrypt.util";
-import { generateUuid } from "../util/fake.data";
 
 class UserService {
-  users: UserDto[];
+  private readonly userRepository;
   constructor() {
-    this.users = [
-      {
-        username: "srdelarosab@gmail.com",
-        firstName: "Renato",
-        lastName: "De la Rosa",
-        password:
-          "$2b$10$Q0dCdlxi9cB6cN5nN3XhZeBc0IYa.GpqtcjD89akGfXYwlJyBvWc2",
-        role: "ADMIN",
-        id: "f418623b-c9fc-4738-9058-a796a0d07a19",
-      },
-    ];
+    this.userRepository = new UserRepository();
   }
-  getAll(): Promise<UserDto[]> {
-    return new Promise((resolve) => resolve(this.users));
+  async getAll(): Promise<UserDto[]> {
+    let usersDto: UserDto[] = [];
+    const usersModel = await this.userRepository.getAll();
+    usersModel.map((u) =>
+      usersDto.push({
+        id: u.id,
+        username: u.username!,
+        firstName: u.firstName!,
+        lastName: u.lastName!,
+        role: u.role!,
+      })
+    );
+    return usersDto;
   }
   async getById(userId: string): Promise<UserDto> {
-    const user = this.users.find((p) => p.id === userId);
-    if (!user) {
+    const userModel = await this.userRepository.getById(userId);
+    if (!userModel) {
       throw boom.notFound("user not found 😔");
     }
 
-    return user;
-  }
-  async getByUsername(username: string): Promise<UserDto> {
-    const user = this.users.find((p) => p.username === username);
-    if (!user) {
-      throw boom.notFound("user not found 😔");
-    }
-    return user;
-  }
-  async add(userToAdd: UserDto): Promise<UserDto> {
-    const user = this.users.find((p) => p.username === userToAdd.username);
-    if (user) {
-      throw boom.notFound("user current exists 😔");
-    }
-    userToAdd.id = generateUuid();
-    userToAdd.password = await hashText(userToAdd.password);
-    this.users.push(userToAdd);
-    return userToAdd;
-  }
-  async update(userId: string, userToUpdate: UserDto): Promise<UserDto> {
-    const index = this.users.findIndex((p) => p.id === userId);
-    if (index === -1) {
-      throw boom.notFound("user not found 😔");
-    }
-    const user = this.users[index];
-    const userUpdated = {
-      ...user,
-      ...userToUpdate,
+    const UserDto: UserDto = {
+      id: userModel.id,
+      username: userModel.username!,
+      firstName: userModel.firstName!,
+      lastName: userModel.lastName!,
+      role: userModel.role!,
     };
-    this.users[index] = userUpdated;
-
-    return userUpdated;
+    return UserDto;
   }
-  async remove(userId: string): Promise<{}> {
-    const index = this.users.findIndex((p) => p.id === userId);
-    if (index === -1) {
-      throw new Error("user not found 😔");
+
+  async getByUsername(username: string): Promise<UserDto> {
+    const userModel = await this.userRepository.getByUsernameId(username);
+    if (!userModel) {
+      throw boom.notFound("user not found 😔");
     }
-    this.users.splice(index, 1);
-    return { userId, success: true };
+
+    const UserDto: UserDto = {
+      id: userModel.id,
+      username: userModel.username!,
+      firstName: userModel.firstName!,
+      lastName: userModel.lastName!,
+      role: userModel.role!,
+      password: userModel.password!,
+    };
+    return UserDto;
+  }
+
+  async add(userDtoToAdd: UserDto): Promise<UserDto> {
+    const userModel = new UserModel({
+      username: userDtoToAdd.username!,
+      firstName: userDtoToAdd.firstName!,
+      lastName: userDtoToAdd.lastName!,
+      role: userDtoToAdd.role!,
+      password: await hashText(userDtoToAdd.password!),
+    });
+    const newUserModel = await this.userRepository.add(userModel);
+    userDtoToAdd.id = newUserModel.id;
+    return userDtoToAdd;
+  }
+  async update(userId: string, userDtoToUpdate: UserDto): Promise<UserDto> {
+    const userModel = await this.userRepository.update(userDtoToUpdate, userId);
+    const UserDto: UserDto = {
+      id: userModel?.id,
+      username: userModel?.username!,
+      firstName: userModel?.firstName!,
+      lastName: userModel?.lastName!,
+      role: userModel?.role!,
+    };
+    return UserDto;
+  }
+  async remove(userId: string): Promise<UserDto> {
+    const userModel = await this.userRepository.remove(userId);
+    let UserDto: UserDto = {
+      id: userModel?.id,
+      username: userModel?.username!,
+      firstName: userModel?.firstName!,
+      lastName: userModel?.lastName!,
+      role: userModel?.role!,
+    };
+    return UserDto;
   }
 }
 

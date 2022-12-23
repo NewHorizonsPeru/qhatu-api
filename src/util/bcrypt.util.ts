@@ -6,6 +6,7 @@ const hashText = async (txtToHash: string) => {
 };
 
 const validateHash = async (text: string, hashText: string) => {
+  console.log(text, hashText);
   return await bcrypt.compare(text, hashText);
 };
 

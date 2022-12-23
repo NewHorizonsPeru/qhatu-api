@@ -76,8 +76,18 @@ class ProductService {
     };
     return productDto;
   }
-  async remove(productId: string): Promise<void> {
-    await this.productRepository.remove(productId);
+  async remove(productId: string): Promise<ProductDto> {
+    const productModel = await this.productRepository.remove(productId);
+    let productDto: ProductDto = {
+      id: productModel?.id,
+      category: productModel?.category!,
+      description: productModel?.description!,
+      imageUrl: productModel?.imageUrl!,
+      name: productModel?.name!,
+      price: productModel?.price!,
+      sku: productModel?.code!,
+    };
+    return productDto;
   }
 }
 

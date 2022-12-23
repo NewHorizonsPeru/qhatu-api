@@ -23,6 +23,6 @@ export default class ProductRepository {
   }
   async remove(productId: string) {
     const productRemove = await ProductModel.findByIdAndDelete(productId);
-    return productId;
+    return productRemove;
   }
 }

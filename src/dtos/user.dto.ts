@@ -4,7 +4,7 @@ export default interface UserDto {
   username: string;
   firstName: string;
   lastName: string;
-  password: string;
-  role: Role;
+  password?: string;
+  role: string;
   token?: string;
 }

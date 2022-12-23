@@ -1,9 +1,6 @@
 import express, { NextFunction, Request, Response } from "express";
-import passport from "passport";
 import ProductDto from "../dtos/product.dto";
 import HttpStatusCode from "../enums/httpstatuscode.enum";
-import QhatuRole from "../enums/role.enum";
-import { accessControlMiddleware } from "../middlewares/auth.middleware";
 import { schemaMiddleware } from "../middlewares/schema.middleware";
 import { createProductSchema } from "../schemas/product.schema";
 import ProductService from "../services/product.service";

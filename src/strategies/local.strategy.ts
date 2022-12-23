@@ -15,12 +15,12 @@ const localStrategy = new Strategy(
       if (!user) {
         done(boom.badData("Username or Password incorrect."), false);
       }
-      console.log("AVC");
       const validateCredentials = await validateHash(password, user.password!);
 
       if (!validateCredentials) {
         done(boom.badData("Username or Password incorrect."), false);
       }
+      user.password = "";
       done(null, user);
     } catch (error) {
       done(boom.internal(), false);

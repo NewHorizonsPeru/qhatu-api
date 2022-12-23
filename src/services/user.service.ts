@@ -40,7 +40,7 @@ class UserService {
   }
 
   async getByUsername(username: string): Promise<UserDto> {
-    const userModel = await this.userRepository.getByUsernameId(username);
+    const userModel = await this.userRepository.getByUsername(username);
     if (!userModel) {
       throw boom.notFound("user not found 😔");
     }
@@ -66,6 +66,7 @@ class UserService {
     });
     const newUserModel = await this.userRepository.add(userModel);
     userDtoToAdd.id = newUserModel.id;
+    userDtoToAdd.password = "";
     return userDtoToAdd;
   }
   async update(userId: string, userDtoToUpdate: UserDto): Promise<UserDto> {

@@ -2,35 +2,48 @@ import express, { NextFunction, Request, Response } from "express";
 import passport from "passport";
 import CategoryDto from "../dtos/category.dto";
 import HttpStatusCode from "../enums/httpstatuscode.enum";
-import QhatuRole from "../enums/role.enum";
-import { accessControlMiddleware } from "../middlewares/auth.middleware";
 import CategoryService from "../services/category.service";
 
 const categoryController = express.Router();
 const categoryService = new CategoryService();
 /** GET ALL
- * @openapi
+ * @swagger
  * /category:
- *      get:
- *      responses:
- *        '200':
- *          description: Retorna el objeto insertado en la coleccion.
- *        '422':
- *          description: Error de validacion.
+ *   get:
+ *     description: Returns Categories
+ *     tags:
+ *      - Categories
+ *     produces:
+ *      - application/json
+ *     responses:
+ *       200:
+ *         description: Category
+ *
  */
 categoryController.get("/", async (request: Request, response: Response) => {
   const categories = await categoryService.getAll();
   response.status(HttpStatusCode.OK).json(categories);
 });
 /** GET BY ID
- * @openapi
- * /category/id:
- *      get:
- *      responses:
- *        '200':
- *          description: Retorna el objeto insertado en la coleccion.
- *        '422':
- *          description: Error de validacion.
+ * @swagger
+ * /category/{categoryId}:
+ *   get:
+ *     description: Returns Categories
+ *     parameters:
+ *       - in: path
+ *         name: categoryId
+ *         required: true
+ *         description: Numeric ID of the category to retrieve.
+ *         schema:
+ *           type: string
+ *     tags:
+ *      - Categories
+ *     produces:
+ *      - application/json
+ *     responses:
+ *       200:
+ *         description: Category
+ *
  */
 categoryController.get(
   "/:categoryId",
@@ -47,14 +60,25 @@ categoryController.get(
 
 /**
  * POST CATEGORY
- * @openapi
- * /category:
- *      post:
- *      responses:
- *        '200':
- *          description: Retorna el objeto insertado en la coleccion.
- *        '422':
- *          description: Error de validacion.
+ * @swagger
+ * /cateogry:
+ *   post:
+ *     tags:
+ *      - Categories
+ *     summary: Create a category.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 description: The categorie's name.
+ *                 example: Tecnologia
+ *     responses:
+ *       201:
  */
 categoryController.post("/", async (request: Request, response: Response) => {
   const categoryToCreate: CategoryDto = request.body;
@@ -62,14 +86,34 @@ categoryController.post("/", async (request: Request, response: Response) => {
   const modelCategory = response.status(HttpStatusCode.CREATED).json(category);
 });
 /** UPDATE ALL
- * @openapi
- * /category:
- *      put:
- *      responses:
- *        '200':
- *          description: Retorna el objeto insertado en la coleccion.
- *        '422':
- *          description: Error de validacion.
+/**
+ * POST CATEGORY
+ * @swagger
+ * /cateogry/{categoryId}:
+ *   put:
+ *     tags:
+ *      - Categories
+ *     summary: Create a category.
+ *     parameters:
+ *      - in: path
+ *        name: categoryId
+ *        required: true
+ *        description: Numeric ID of the category to retrieve.
+ *        schema:
+ *         type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 description: The categorie's name.
+ *                 example: Tecnologia
+ *     responses:
+ *       201:
  */
 categoryController.put(
   "/:categoryId",
@@ -81,14 +125,26 @@ categoryController.put(
   }
 );
 /** REMOVE
- * @openapi
- * /category:
- *      delete:
- *      responses:
- *        '200':
- *          description: Retorna el objeto insertado en la coleccion.
- *        '422':
- *          description: Error de validacion.
+/** GET BY ID
+ * @swagger
+ * /category/{categoryId}:
+ *   delete:
+ *     description: Returns Categories
+ *     parameters:
+ *       - in: path
+ *         name: categoryId
+ *         required: true
+ *         description: Numeric ID of the category to retrieve.
+ *         schema:
+ *           type: string
+ *     tags:
+ *      - Categories
+ *     produces:
+ *      - application/json
+ *     responses:
+ *       200:
+ *         description: Category
+ *
  */
 categoryController.delete(
   "/:categoryId",

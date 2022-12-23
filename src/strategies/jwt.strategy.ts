@@ -4,11 +4,11 @@ import {
   StrategyOptions,
   VerifiedCallback,
 } from "passport-jwt";
-import { enviroment } from "../config/enviroment.config";
+import enviroment from "../config/enviroment.config";
 
 const options: StrategyOptions = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-  secretOrKey: enviroment.SecretKey,
+  secretOrKey: enviroment.SecretKey!,
 };
 
 const jwtStrategy = new Strategy(

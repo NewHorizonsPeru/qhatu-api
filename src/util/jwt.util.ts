@@ -1,6 +1,6 @@
 import UserDto from "../dtos/user.dto";
 import jwt from "jsonwebtoken";
-import { enviroment } from "../config/enviroment.config";
+import enviroment from "../config/enviroment.config";
 
 const generateJwt = (user: UserDto) => {
   const payload = {
@@ -13,7 +13,7 @@ const generateJwt = (user: UserDto) => {
     expiresIn: "1h",
   };
 
-  const jwtoken = jwt.sign(payload, enviroment.SecretKey, options);
+  const jwtoken = jwt.sign(payload, enviroment.SecretKey!, options);
   return jwtoken;
 };
 

@@ -3,6 +3,7 @@ import passport from "passport";
 import cors from "cors";
 import swagggerUi from "swagger-ui-express";
 
+import enviroment from "./src/config/enviroment.config";
 import "./src/config/mongodb.config";
 import swaggerConfig from "./src/config/swagger.config";
 import {
@@ -13,7 +14,6 @@ import {
 import registerRoutes from "./src/routes/qhatu.router";
 import registerStrategies from "./src/strategies/strategies";
 import { corsOptions } from "./src/config/cors.config";
-import { enviroment } from "./src/config/enviroment.config";
 
 const app: Express = express();
 
@@ -31,5 +31,7 @@ app.use(boomErrorMiddleware);
 app.use(jsonErrorMiddleware);
 
 app.listen(enviroment.ApiPort, () => {
-  console.log(`⚡️ Message: Server is running 🔥`);
+  console.log(
+    `⚡️ Message: Server is running on http://localhost:${enviroment.ApiPort}🔥`
+  );
 });

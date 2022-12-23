@@ -7,6 +7,32 @@ import { generateJwt } from "../util/jwt.util";
 
 const securityController = express.Router();
 const userService = new UserService();
+/**
+ * POST CATEGORY
+ * @swagger
+ * /signIn:
+ *   post:
+ *     tags:
+ *      - Security
+ *     summary: SignIn application.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 description: The username.
+ *                 example: admin@domain.com
+ *               password:
+ *                 type: string
+ *                 description: The password.
+ *                 example: 123456
+ *     responses:
+ *       201:
+ */
 securityController.post(
   "/signIn",
   passport.authenticate("local", { session: false }),
@@ -20,7 +46,32 @@ securityController.post(
     }
   }
 );
-
+/**
+ * POST CATEGORY
+ * @swagger
+ * /signUp:
+ *   post:
+ *     tags:
+ *      - Security
+ *     summary: SignUp application.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 description: The username.
+ *                 example: admin@domain.com
+ *               password:
+ *                 type: string
+ *                 description: The password.
+ *                 example: 123456
+ *     responses:
+ *       201:
+ */
 securityController.post(
   "/signUp",
   async (request: any, response: any, next: any) => {

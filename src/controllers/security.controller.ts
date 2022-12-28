@@ -3,6 +3,7 @@ import passport from "passport";
 import userDto from "../dtos/user.dto";
 import HttpStatusCode from "../enums/httpstatuscode.enum";
 import UserService from "../services/user.service";
+import { getRoles } from "../util/fake.data";
 import { generateJwt } from "../util/jwt.util";
 
 const securityController = express.Router();
@@ -84,5 +85,9 @@ securityController.post(
     }
   }
 );
+
+securityController.get("/getRoles", (request: any, response: any) => {
+  response.status(HttpStatusCode.OK).json(getRoles);
+});
 
 export default securityController;

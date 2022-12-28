@@ -57,6 +57,12 @@ class UserService {
   }
 
   async add(userDtoToAdd: UserDto): Promise<UserDto> {
+    const userModelExists = await this.userRepository.getByUsername(
+      userDtoToAdd.username
+    );
+    if (userModelExists) {
+      throw boom.notFound("user exists in application 😔");
+    }
     const userModel = new UserModel({
       username: userDtoToAdd.username!,
       firstName: userDtoToAdd.firstName!,

@@ -36,4 +36,27 @@ const generateUuid = () => {
   return faker.datatype.uuid();
 };
 
-export { generateProducts, generateCategories, generateUuid };
+const getRoles = [
+  {
+    id: generateUuid(),
+    code: "ADMIN",
+    name: "Administrador",
+  },
+  {
+    id: generateUuid(),
+    code: "SALES",
+    name: "Ventas",
+  },
+  {
+    id: generateUuid(),
+    code: "INVENTORY",
+    name: "Inventario",
+  },
+  {
+    id: generateUuid(),
+    code: "CUSTOMER",
+    name: "Vendedor",
+  },
+];
+
+export { generateProducts, generateCategories, generateUuid, getRoles };
